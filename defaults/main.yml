@@ -1,0 +1,41 @@
+---
+
+etcd_version: 3.4.5
+etcd_download_url: https://github.com/etcd-io/etcd/releases/download/v{{ etcd_version }}/etcd-v{{ etcd_version }}-linux-amd64.tar.gz
+etcd_install_dir: /opt/etcd_{{ etcd_version }}
+etcd_data_dir: /var/lib/etcd
+
+etcd_user: etcd
+etcd_group: etcd
+
+etcd_name: etcd-0
+etcd_initial_cluster_token: etcd-cluster-0
+
+etcd_cert_file: /srv/certs/etcd/etcd.pem
+etcd_key_file: /srv/private/etcd/etcd.key
+etcd_trusted_ca_file: /srv/ca/ca.pem
+etcd_peer_cert_file: /srv/certs/etcd/etcd.pem
+etcd_peer_key_file: /srv/private/etcd/etcd.key
+etcd_peer_trusted_ca_file: /srv/ca/ca.pem
+
+etcd_client_cert_auth: true
+etcd_peer_client_cert_auth: true
+
+etcd_initial_advertise_peer_urls:
+  - https://{{ ansible_eth1.ipv4.address }}:2380
+
+etcd_initial_cluster:
+  - etcd-0=https://{{ ansible_eth1.ipv4.address }}:2380
+  #- etcd-1=https://10.240.0.11:2380
+  #- etcd-2=https://10.240.0.12:2380
+
+etcd_initial_cluster_state: new
+etcd_listen_peer_urls:
+  - https://{{ ansible_eth1.ipv4.address }}:2380
+
+etcd_listen_client_urls:
+  - https://{{ ansible_eth1.ipv4.address }}:2379
+  - https://127.0.0.1:2379
+
+etcd_advertise_client_urls:
+  - https://{{ ansible_eth1.ipv4.address }}:2379

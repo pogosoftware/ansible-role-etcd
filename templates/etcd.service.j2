@@ -1,0 +1,34 @@
+[Unit]
+Description=etcd
+Documentation=https://github.com/coreos
+
+[Service]
+User={{ etcd_user }}
+Group={{ etcd_group }}
+ExecStart={{ etcd_install_dir }}/etcd \
+            --name={{ etcd_name }} \
+            --data-dir={{ etcd_data_dir }} \
+            --cert-file={{ etcd_cert_file }} \
+            --key-file={{ etcd_key_file }} \
+            --trusted-ca-file={{ etcd_trusted_ca_file }} \
+            --peer-cert-file={{ etcd_peer_cert_file }} \
+            --peer-key-file={{ etcd_peer_key_file }} \
+            --peer-trusted-ca-file={{ etcd_peer_trusted_ca_file }} \
+            {% if etcd_client_cert_auth -%}
+            --client-cert-auth \
+            {% endif -%}
+            {% if etcd_peer_client_cert_auth -%}
+            --peer-client-cert-auth \
+            {% endif -%}
+            --initial-advertise-peer-urls={{ etcd_initial_advertise_peer_urls | join(',') }} \
+            --initial-cluster-token={{ etcd_initial_cluster_token }} \
+            --initial-cluster {{ etcd_initial_cluster | join(',') }} \
+            --initial-cluster-state={{ etcd_initial_cluster_state }} \
+            --listen-peer-urls={{ etcd_listen_peer_urls | join(',') }} \
+            --listen-client-urls={{ etcd_listen_client_urls | join(',') }} \
+            --advertise-client-urls={{ etcd_advertise_client_urls | join(',') }}
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
